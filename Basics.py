@@ -1,25 +1,6 @@
 # Basic Python Concepts
 
 name = input("Enter your name: ")
-age = int(input("Enter your age: "))
+year_of_birth = int(input("Enter your year of birth "))
 
-# Function
-
-def greet(user):
-    print(f"OK {user} Thanks for learning stay tuned for more !")
-
-# Conditional Statements
-print("\nIF ELSE")
-if age < 18:
-    print("You are a minor")
-else:
-    print("You are an adult")
-
-# Loop
-
-print("\nLet's practice Loops")
-for i in range(1,6):
-    print(f"Loop iteration {i}:, Keep going {name}")
-
-#End of Program
-greet(name)
+print(f"{name} You would be {2024 - year_of_birth} years old in 2024")
