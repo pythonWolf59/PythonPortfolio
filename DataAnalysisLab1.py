@@ -43,10 +43,21 @@ for column in missing_data.columns.values.tolist():
 
 print(df.describe())    # Non numeric data only
 
-# Categorical data
+# Convert 'price' column to numeric, forcing errors to NaN
+df['price'] = pd.to_numeric(df['price'], errors='coerce')
 
+# Drop rows with NaN values in 'price' column
+df.dropna(subset=['price'], inplace=True)
+
+# Categorical data
 drive_wheel_counts = df['drive-wheels'].value_counts().reset_index()
 
-print(drive_wheel_counts)
+df_test = df[['drive-wheels', 'body-style', 'price']]
+df_grp = df_test.groupby(['drive-wheels', 'body-style'], as_index=False).mean()
+
+# Pivot table
+df_pivot = df_grp.pivot(index='drive-wheels', columns='body-style')
+print(df_pivot)
+
 
 
