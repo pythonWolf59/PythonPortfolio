@@ -1,6 +1,16 @@
 import numpy as np
 import pandas as pd
 import scipy.stats as stats
+import os
+
+def clear_console():
+    # For Windows
+    if os.name == 'nt':
+        _ = os.system('cls')
+    # For Mac and Linux
+    else:
+        _ = os.system('clear')
+
 
 #Download Dataset
 # import asyncio
@@ -60,16 +70,77 @@ df_grp = df_test.groupby(['drive-wheels', 'body-style'], as_index=False).mean()
 df_pivot = df_grp.pivot(index='drive-wheels', columns='body-style')
 print(df_pivot)
 
-# Convert to numeric, forcing errors to NaN
-df['horsepower'] = pd.to_numeric(df['horsepower'], errors='coerce')
+def calculate_pearson_correlation(dataFrame):
+    """
+    Calculate Pearson correlation coefficient and p-value for two user-selected numeric columns from a DataFrame.
+    Provides easy-to-understand output for non-technical users.
+    
+    Parameters:
+    dataFrame (pandas.DataFrame): Input DataFrame containing the data
+    
+    Returns:
+    tuple: (correlation coefficient, p-value)
+    """
+    clear_console()
+    try:
+        # Get only numeric columns
+        numeric_cols = dataFrame.select_dtypes(include=['int64', 'float64', 'int32', 'float32']).columns
+        
+        if len(numeric_cols) < 2:
+            raise ValueError("DataFrame must contain at least 2 numeric columns")
+            
+        # Display available numeric columns
+        print("Available numeric columns in the DataFrame:")
+        print(list(numeric_cols))
+        
+        # Get column names from user
+        col1 = input("Enter the name of the first numeric column: ")
+        if col1 not in numeric_cols:
+            raise ValueError(f"Column '{col1}' is either not numeric or not found in DataFrame")
+            
+        col2 = input("Enter the name of the second numeric column: ")
+        if col2 not in numeric_cols:
+            raise ValueError(f"Column '{col2}' is either not numeric or not found in DataFrame")
+            
+        # Remove any NaN values and ensure we have paired observations
+        paired_data = dataFrame[[col1, col2]].dropna()
+        
+        if len(paired_data) < 2:
+            raise ValueError("Need at least 2 complete observations for correlation")
+            
+        # Calculate Pearson correlation coefficient and p-value
+        correlation, p_value = stats.pearsonr(paired_data[col1], paired_data[col2])
+        
+        # Print raw results
+        print(f"\nResults for '{col1}' and '{col2}':")
+        print(f"Correlation strength (technical): {correlation:.4f}")
+        print(f"Confidence level (technical): {p_value:.4f}")
+        
+        # Easy-to-understand interpretation
+        print("\nWhat this means in simple terms:")
+        if p_value < 0.05:  # Statistically significant
+            if correlation > 0.7:
+                print(f"There’s a strong positive relationship: As {col1} increases, {col2} tends to increase a lot.")
+            elif 0.5 <= correlation <= 0.7:
+                print(f"There’s a moderate positive relationship: As {col1} increases, {col2} tends to increase some.")
+            elif 0 < correlation < 0.5:
+                print(f"There’s a weak positive relationship: As {col1} increases, {col2} tends to increase a little.")
+            elif -0.5 < correlation < 0:
+                print(f"There’s a weak negative relationship: As {col1} increases, {col2} tends to decrease a little.")
+            elif -0.7 <= correlation <= -0.5:
+                print(f"There’s a moderate negative relationship: As {col1} increases, {col2} tends to decrease some.")
+            elif correlation < -0.7:
+                print(f"There’s a strong negative relationship: As {col1} increases, {col2} tends to decrease a lot.")
+        else:  # Not statistically significant
+            if correlation >= 0:
+                print(f"There’s no clear positive relationship: Changes in {col1} don’t reliably affect {col2}.")
+            else:
+                print(f"There’s no clear negative relationship: Changes in {col1} don’t reliably affect {col2}.")
+        
+        return ""
+        
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return None, None
 
-# Drop any rows with NaN values in the selected columns
-df = df.dropna(subset=['horsepower'])
-
-#Pearson Correlation
-pearson_coef,p_value = stats.pearsonr(df['horsepower'], df['price'])
-
-print(f"Correlation Coefficient:\t{pearson_coef}")
-print(f"\nP-Value:\t{p_value:.4f}")
-
-
+print(calculate_pearson_correlation(df))
