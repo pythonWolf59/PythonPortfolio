@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import scipy.stats as stats
 
 #Download Dataset
 # import asyncio
@@ -59,5 +60,16 @@ df_grp = df_test.groupby(['drive-wheels', 'body-style'], as_index=False).mean()
 df_pivot = df_grp.pivot(index='drive-wheels', columns='body-style')
 print(df_pivot)
 
+# Convert to numeric, forcing errors to NaN
+df['horsepower'] = pd.to_numeric(df['horsepower'], errors='coerce')
+
+# Drop any rows with NaN values in the selected columns
+df = df.dropna(subset=['horsepower'])
+
+#Pearson Correlation
+pearson_coef,p_value = stats.pearsonr(df['horsepower'], df['price'])
+
+print(f"Correlation Coefficient:\t{pearson_coef}")
+print(f"\nP-Value:\t{p_value:.4f}")
 
 
