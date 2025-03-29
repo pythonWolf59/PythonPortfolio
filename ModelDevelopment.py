@@ -28,3 +28,26 @@ linear_model.fit(X,Y)
 prediction = linear_model.predict(X)
 print(f" Predicted Value: {prediction[0]}")
 print(f" Actual Value: {df['price'].values[0]}")
+
+print(f"Intercept bo = {linear_model.intercept_}")
+print(f"Slope b1 = {linear_model.coef_}")
+
+#Multiple Linear Regression
+
+# Select multiple features for X
+features = ['engine-size','highway-mpg','fuel-type','drive-wheels',"fuel-system","bore","stroke","compression-ratio","horsepower"]  # you can add more features
+# One-hot encode categorical variables
+df_encoded = pd.get_dummies(df[features])
+
+Y = df[['price']]
+
+# Fit model
+multi_model = LinearRegression()
+multi_model.fit(df_encoded, Y)
+
+# Predict
+prediction = multi_model.predict(df_encoded)
+print("\nNow Using Multiple Linear Regression with more features\n")
+# Output
+print(f"Predicted Value: {prediction[0]}")
+print(f"Actual Value: {df['price'].values[0]}")
