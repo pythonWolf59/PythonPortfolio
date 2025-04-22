@@ -19,16 +19,20 @@ This project is a personal backend playground where I build and experiment with 
 ## 📁 Project Structure
 
 ```
-.
-├── app/
-│   ├── __init__.py          # Flask app setup
-│   ├── routes.py            # All API endpoints
-│   ├── models.py            # SQLAlchemy models
-│   └── database.py          # DB connection/session setup
-├── gradio_ui.py             # Gradio interface for API testing
-├── requirements.txt         # Python dependencies
-└── README.md                # Project documentation
-```
+BasicFlaskCRUD/
+│
+├── .gitignore              # Files and folders to exclude from Git tracking (e.g. __pycache__, .env)
+├── README.md               # Project overview and documentation
+├── requirements.txt        # List of Python packages to install
+│
+├── database.py             # SQLAlchemy database engine and session setup
+├── models.py               # SQLAlchemy models (e.g. User model)
+├── routes.py               # API routes using Flask Blueprints (CRUD operations)
+├── FlaskStartUp.py         # Main app entry point (Flask app, server setup)
+├── gradio_ui.py            # Gradio frontend interface for testing APIs
+│
+└── __pycache__/            # Compiled Python files (auto-generated, ignored by Git)
+
 
 ---
 
@@ -36,8 +40,8 @@ This project is a personal backend playground where I build and experiment with 
 
 1. **Clone this repo**  
    ```bash
-   git clone https://github.com/yourusername/flask-api-playground.git
-   cd flask-api-playground
+   git clone https://github.com/pythonWolf59/PythonPortfolio.git
+   git switch Flask-Apps
    ```
 
 2. **Create a virtual environment**  
@@ -53,12 +57,12 @@ This project is a personal backend playground where I build and experiment with 
 
 4. **Run the Flask server**  
    ```bash
-   python app/main.py
+   python BasicFlaskCRUD\FlaskStartUp.py
    ```
 
 5. **Launch the Gradio UI (Optional)**  
    ```bash
-   python gradio_ui.py
+   python BasicFlaskCRUD\gradio_ui.py
    ```
 
 ---
