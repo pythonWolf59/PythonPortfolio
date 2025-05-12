@@ -24,10 +24,12 @@ class Customer(models.Model):
 # Now we will create a model for managing Loan of the customer
 class LoanContract(models.Model):
     STATUS_CHOICES = [
-        ('active', 'Active'),
-        ('closed', 'Closed'),
-        ('overdue', 'Overdue'),
-        ('defaulted', 'Defaulted'),
+    ('draft', 'Draft'),
+    ('active', 'Active'),
+    ('disbursed', 'Disbursed'),
+    ('closed', 'Closed'),
+    ('overdue', 'Overdue'),
+    ('defaulted', 'Defaulted'),
     ]
 
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='loan_contracts')
@@ -42,6 +44,16 @@ class LoanContract(models.Model):
 
     def __str__(self):
         return f"Loan #{self.id} for {self.customer.name}"
+    
+# Model for tracking EMI Payments
+
+class EMIPayment(models.Model):
+    loan = models.ForeignKey(LoanContract, on_delete=models.CASCADE, related_name='emi_payments')
+    due_date = models.DateField()
+    amount_due = models.DecimalField(max_digits=10, decimal_places=2)
+    amount_paid = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    payment_date = models.DateField(null=True, blank=True)
+    status = models.CharField(max_length=20, default='unpaid')  # unpaid, paid, overdue
 
 # Model for Lease Contract
 class LeaseContract(models.Model):
