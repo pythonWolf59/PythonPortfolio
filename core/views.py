@@ -1,7 +1,8 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
-from .models import Customer
-from .serializers import CustomerSerializer
+from .models import Customer, LoanContract
+from .serializers import CustomerSerializer, LoanContractSerializer
 
 class CustomerViewSet(viewsets.ModelViewSet):
     queryset = Customer.objects.all()
@@ -43,3 +44,20 @@ class CustomerViewSet(viewsets.ModelViewSet):
         return Response({"detail": "Customer deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
 
 # Add your other viewsets here
+class LoanContractViewSet(viewsets.ModelViewSet):
+    ''' LoanContract viewset to manage loan contracts '''
+
+    queryset = LoanContract.objects.all()
+    serializer_class = LoanContractSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    
+    # Set the lookup field to 'email' instead of 'id'
+    lookup_field = 'email'
+
+    def get_object(self):
+        email = self.kwargs.get('email') or self.kwargs.get('pk')  # supports both if needed
+        return get_object_or_404(LoanContract, email=email)
+    
+    def perform_create(self, serializer):
+        "Automatic interest rate calculation based on the loan amount and tenure"
+        serializer.save()

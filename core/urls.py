@@ -1,11 +1,12 @@
 from rest_framework.routers import DefaultRouter
-from .views import CustomerViewSet
+from .views import CustomerViewSet, LoanContractViewSet
 
 from django.urls import path, include
 
 # Create a router and register our viewset with it.
 router = DefaultRouter()
 router.register(r'customers', CustomerViewSet)
+router.register(r'loans', LoanContractViewSet)
 
 # The API URLs are now determined automatically by the router.
 # Override the default URL patterns for update and delete actions
