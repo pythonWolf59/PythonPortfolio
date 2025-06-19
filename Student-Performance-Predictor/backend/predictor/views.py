@@ -5,6 +5,7 @@ import joblib
 import os
 import pandas as pd
 from .serializers import StudentDataSerializer
+from .supabase_client import supabase
 
 class PredictGradeView(APIView):
     def post(self, request):
@@ -21,6 +22,13 @@ class PredictGradeView(APIView):
                 input_data[col] = input_data[col].astype('category').cat.codes
 
             prediction = model.predict(input_data)[0]
+
+            # Save prediction to Supabase
+            supabase.table("predictions").insert({
+                "input_data": serializer.validated_data,
+                "predicted_grade": round(prediction, 2)
+            }).execute()
+
 
             return Response({'predicted_grade': round(prediction, 2)}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
