@@ -15,7 +15,7 @@
             "scope": "string.quoted",
             "settings": {
                 "fontStyle": "bold",
-                "foreground": "#c70425" // Maroon color
+                "foreground": "#d6f7ab" // Light green color
             }
         },
         {
